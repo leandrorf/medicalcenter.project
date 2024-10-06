@@ -1,8 +1,9 @@
-﻿namespace medicalcenter.project.api.Domain.Entities
+﻿using medicalcenter.project.api.Domain.Entities.Base;
+
+namespace medicalcenter.project.api.Domain.Entities
 {
-    public class EspecialidadeEntity
+    public class EspecialidadeEntity : BaseEntity
     {
-        public Guid Id { get; set; }
         public string Nome { get; set; }
         public string Descricao { get; set; }
     }

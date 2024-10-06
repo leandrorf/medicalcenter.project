@@ -1,3 +1,4 @@
+using medicalcenter.project.api.CrossCutting.DependencyInjection;
 using medicalcenter.project.api.Data.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,6 +17,9 @@ builder.Services.AddDbContext<SqlServerDbContext>( options =>
 {
     options.UseSqlServer( connectionString );
 } );
+
+builder.Services.ConfigureDependenciesRepository( );
+builder.Services.ConfigureDependenciesService( );
 
 var app = builder.Build( );
 

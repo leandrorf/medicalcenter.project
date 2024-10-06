@@ -40,9 +40,8 @@ namespace medicalcenter.project.api.Migrations
                     b.Property<Guid>("PacienteId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -100,17 +99,17 @@ namespace medicalcenter.project.api.Migrations
             modelBuilder.Entity("medicalcenter.project.api.Domain.Entities.TriagemEntity", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<double>("Altura")
                         .HasColumnType("float");
 
-                    b.Property<Guid>("AtendimentoID")
+                    b.Property<Guid>("AtendimentoId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("EspecialidadeID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid>("EspecialidadeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<double>("Peso")
                         .HasColumnType("float");
@@ -124,6 +123,10 @@ namespace medicalcenter.project.api.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AtendimentoId");
+
+                    b.HasIndex("EspecialidadeId");
 
                     b.ToTable("Triagens", (string)null);
                 });
@@ -141,13 +144,13 @@ namespace medicalcenter.project.api.Migrations
                 {
                     b.HasOne("medicalcenter.project.api.Domain.Entities.AtendimentoEntity", null)
                         .WithMany()
-                        .HasForeignKey("Id")
+                        .HasForeignKey("AtendimentoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("medicalcenter.project.api.Domain.Entities.EspecialidadeEntity", null)
                         .WithMany()
-                        .HasForeignKey("Id")
+                        .HasForeignKey("EspecialidadeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

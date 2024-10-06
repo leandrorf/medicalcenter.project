@@ -6,15 +6,14 @@ namespace medicalcenter.project.api.Data.Context
 {
     public class SqlServerDbContext : DbContext
     {
-        DbSet<PacienteEntity> Patient { get; set; }
-        DbSet<AtendimentoEntity> Atendimento { get; set; }
-        DbSet<TriagemEntity> Triagem { get; set; }
-        DbSet<EspecialidadeEntity> Especialidades { get; set; }
+        private DbSet<PacienteEntity> Patient { get; set; }
+        private DbSet<AtendimentoEntity> Atendimento { get; set; }
+        private DbSet<TriagemEntity> Triagem { get; set; }
+        private DbSet<EspecialidadeEntity> Especialidades { get; set; }
 
         public SqlServerDbContext( DbContextOptions<SqlServerDbContext> options )
             : base( options )
         {
-
         }
 
         protected override void OnConfiguring( DbContextOptionsBuilder optionsBuilder )

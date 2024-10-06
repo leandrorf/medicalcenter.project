@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace medicalcenter.project.api.Migrations
 {
     /// <inheritdoc />
-    public partial class eu : Migration
+    public partial class NewDataBase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -48,7 +48,7 @@ namespace medicalcenter.project.api.Migrations
                     NumeroSequencial = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DataHoraChegada = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -66,25 +66,25 @@ namespace medicalcenter.project.api.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AtendimentoID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AtendimentoId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    EspecialidadeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Sintomas = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PressaoArterial = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Peso = table.Column<double>(type: "float", nullable: false),
-                    Altura = table.Column<double>(type: "float", nullable: false),
-                    EspecialidadeID = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Altura = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Triagens", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Triagens_Atendimentos_Id",
-                        column: x => x.Id,
+                        name: "FK_Triagens_Atendimentos_AtendimentoId",
+                        column: x => x.AtendimentoId,
                         principalTable: "Atendimentos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Triagens_Especialidades_Id",
-                        column: x => x.Id,
+                        name: "FK_Triagens_Especialidades_EspecialidadeId",
+                        column: x => x.EspecialidadeId,
                         principalTable: "Especialidades",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -94,6 +94,16 @@ namespace medicalcenter.project.api.Migrations
                 name: "IX_Atendimentos_PacienteId",
                 table: "Atendimentos",
                 column: "PacienteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Triagens_AtendimentoId",
+                table: "Triagens",
+                column: "AtendimentoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Triagens_EspecialidadeId",
+                table: "Triagens",
+                column: "EspecialidadeId");
         }
 
         /// <inheritdoc />

@@ -10,7 +10,6 @@ namespace medicalcenter.project.api.Data.Mapping
         {
             builder.ToTable( "Atendimentos" );
 
-
             builder.HasKey( x => x.Id );
             builder.Property( x => x.NumeroSequencial ).ValueGeneratedOnAdd( );
             builder.Property( x => x.DataHoraChegada ).IsRequired( );

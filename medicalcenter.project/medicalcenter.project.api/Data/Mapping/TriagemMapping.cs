@@ -15,14 +15,17 @@ namespace medicalcenter.project.api.Data.Mapping
             builder.Property( x => x.Peso ).IsRequired( );
             builder.Property( x => x.Altura ).IsRequired( );
 
+            //builder.HasOne( x => x.Especialidade ).WithMany( ).HasForeignKey( x => x.EspecialidadeId );
+            //builder.HasOne( x => x.Atendimento ).WithMany( ).HasForeignKey( x => x.AtendimentoId );
+
             builder.HasOne<AtendimentoEntity>( )
                 .WithMany( )
-                .HasForeignKey( nameof( AtendimentoEntity.Id ) )
+                .HasForeignKey( nameof( TriagemEntity.AtendimentoId ) )
                 .IsRequired( );
 
             builder.HasOne<EspecialidadeEntity>( )
                 .WithMany( )
-                .HasForeignKey( nameof( TriagemEntity.Id ) )
+                .HasForeignKey( nameof( TriagemEntity.EspecialidadeId ) )
                 .IsRequired( );
         }
     }
