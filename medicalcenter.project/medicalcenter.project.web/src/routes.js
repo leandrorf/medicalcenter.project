@@ -1,21 +1,13 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import Login from './pages/Login';
-import Alunos from './pages/Alunos';
-import NovoAluno from './pages/NovoAluno';
-
 import Pacientes from './pages/Pacientes';
 import NovoPaciente from './pages/NovoPaciente';
-
 import Atendimentos from './pages/Atendimentos';
 import NovoAtendimento from './pages/NovoAtendimento';
-
 import Triagens from './pages/Triagens';
 import NovoTriagem from './pages/NovoTriagem';
-
 import Especialidades from './pages/Especialidades';
 import NovoEspecialidade from './pages/NovoEspecialidade';
-
 import Espera from './pages/Espera';
 
 import Home from './pages/Home'
