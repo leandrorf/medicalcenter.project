@@ -15,11 +15,7 @@ import Home from './pages/Home'
 export default function Routes(){
     return (
         <BrowserRouter>
-           <Switch>               
-               <Route path="/login" component={Login}/>
-               <Route path="/alunos" component={Alunos}/>
-               <Route path="/aluno/novo/:alunoId" component={NovoAluno}/>
-
+           <Switch>
                <Route path="/" exact component={Home} />
                <Route path="/pacientes" component={Pacientes}/>
                <Route path="/paciente/novo/:pacienteId" component={NovoPaciente}/>
@@ -29,7 +25,6 @@ export default function Routes(){
                <Route path="/triagem/novo/:triagemId" component={NovoTriagem} />
                <Route path="/especialidades" component={Especialidades} />
                <Route path="/especialidade/novo/:especialidadeId" component={NovoEspecialidade} />
-
                <Route path="/espera" component={Espera} />
             </Switch>
         </BrowserRouter>    
