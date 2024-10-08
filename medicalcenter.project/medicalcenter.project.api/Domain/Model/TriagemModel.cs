@@ -3,7 +3,7 @@
     public class TriagemModel
     {
         private Guid id;
-        private Guid atendimentoID;
+        private Guid atendimentoId;
         private Guid especialidadeId;
         private string sintomas;
         private string pressaoArterial;
@@ -24,7 +24,8 @@
 
             set => id = value;
         }
-        public Guid AtendimentoID { get => atendimentoID; set => atendimentoID = value; }
+
+        public Guid AtendimentoId { get => atendimentoId; set => atendimentoId = value; }
         public Guid EspecialidadeId { get => especialidadeId; set => especialidadeId = value; }
         public string Sintomas { get => sintomas; set => sintomas = value; }
         public string PressaoArterial { get => pressaoArterial; set => pressaoArterial = value; }

@@ -12,8 +12,8 @@ using medicalcenter.project.api.Data.Context;
 namespace medicalcenter.project.api.Migrations
 {
     [DbContext(typeof(SqlServerDbContext))]
-    [Migration("20241005230030_NewDataBase")]
-    partial class NewDataBase
+    [Migration("20241008013604_UpdateDatabase")]
+    partial class UpdateDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -86,9 +86,8 @@ namespace medicalcenter.project.api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Sexo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Sexo")
+                        .HasColumnType("int");
 
                     b.Property<string>("Telefone")
                         .IsRequired()

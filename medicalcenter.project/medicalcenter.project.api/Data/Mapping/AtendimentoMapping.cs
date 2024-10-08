@@ -1,5 +1,6 @@
 ﻿using medicalcenter.project.api.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace medicalcenter.project.api.Data.Mapping
@@ -14,6 +15,10 @@ namespace medicalcenter.project.api.Data.Mapping
             builder.Property( x => x.NumeroSequencial ).ValueGeneratedOnAdd( );
             builder.Property( x => x.DataHoraChegada ).IsRequired( );
             builder.Property( x => x.Status ).IsRequired( );
+
+            builder.Property( x => x.PacienteId ).Metadata.SetAfterSaveBehavior( PropertySaveBehavior.Ignore );
+            builder.Property( x => x.NumeroSequencial ).Metadata.SetAfterSaveBehavior( PropertySaveBehavior.Ignore );
+            builder.Property( x => x.DataHoraChegada ).Metadata.SetAfterSaveBehavior( PropertySaveBehavior.Ignore );
 
             builder.HasOne<PacienteEntity>( )
                 .WithMany( )

@@ -23,7 +23,14 @@ namespace medicalcenter.project.api.Controllers
         [HttpGet( "StatusAtentimento" )]
         public async Task<ActionResult> GetStatus( )
         {
-            return Ok( Enum.GetNames( typeof( EStatusAtendimento ) ) );
+            try
+            {
+                return Ok( Enum.GetNames( typeof( EStatusAtendimento ) ) );
+            }
+            catch ( Exception ex )
+            {
+                return StatusCode( ( int )StatusCodes.Status500InternalServerError, ex );
+            }
         }
 
         [HttpGet( "AreasAtentimento" )]
@@ -35,13 +42,28 @@ namespace medicalcenter.project.api.Controllers
         [HttpGet( "ChamarPaciente" )]
         public async Task<ActionResult> GetPaciente( [FromQuery] EAreasAtendimento service )
         {
-            return Ok( await _Service.GetNextPatient( service ) );
+            try
+            {
+                return Ok( await _Service.GetNextPatient( service ) );
+            }
+            catch ( Exception ex )
+            {
+                return StatusCode( ( int )HttpStatusCode.InternalServerError, ex.Message );
+            }
         }
 
         [HttpGet( "VisualizarFila" )]
         public async Task<ActionResult> GetQueueForService( [FromQuery] EAreasAtendimento service )
         {
-            return Ok( await _Service.GetQueueForService( service ) );
+            try
+            {
+                return Ok( await _Service.GetQueueForService( service ) );
+            }
+            catch ( Exception ex )
+            {
+                return StatusCode( ( int )StatusCodes.Status500InternalServerError, ex );
+                throw;
+            }
         }
 
         [HttpGet]

@@ -49,6 +49,7 @@ namespace medicalcenter.project.api.Data.Repositories.Base
             {
                 var result = await _DbSet.SingleOrDefaultAsync( x => x.Id == entity.Id );
                 _Context.Entry( result ).CurrentValues.SetValues( entity );
+                //_Context.Update( entity );
                 await _Context.SaveChangesAsync( );
 
                 return entity;

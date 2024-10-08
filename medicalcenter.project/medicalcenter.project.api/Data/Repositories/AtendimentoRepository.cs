@@ -48,7 +48,10 @@ namespace medicalcenter.project.api.Data.Repositories
                 {
                     case EAreasAtendimento.Triagem:
                     {
-                        entity = _DbSet.ToListAsync( ).Result.Where( x => x.Status == EStatusAtendimento.AguardandoTriagem ).MinBy( x => x.NumeroSequencial );
+                        entity = _DbSet.ToListAsync( ).Result
+                            .Where( x => x.Status == EStatusAtendimento.AguardandoTriagem
+                                    || x.Status == EStatusAtendimento.AtendimentoTriagem )
+                            .MinBy( x => x.NumeroSequencial );
 
                         break;
                     }

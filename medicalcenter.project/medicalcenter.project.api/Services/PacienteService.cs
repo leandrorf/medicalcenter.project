@@ -20,49 +20,84 @@ namespace medicalcenter.project.api.Services
 
         public async Task<IEnumerable<PacienteDtoResponse>> GetAsync( )
         {
-            var entity = await _Repository.GetAsync( );
+            try
+            {
+                var entity = await _Repository.GetAsync( );
 
-            return _Mapper.Map<IEnumerable<PacienteDtoResponse>>( entity );
+                return _Mapper.Map<IEnumerable<PacienteDtoResponse>>( entity );
+            }
+            catch ( Exception ex )
+            {
+                throw new Exception( ex.Message );
+            }
         }
 
         public async Task<PacienteDtoResponse> GetByIdAsync( Guid id )
         {
-            var entity = await _Repository.GetByIdAsync( id );
+            try
+            {
+                var entity = await _Repository.GetByIdAsync( id );
 
-            return _Mapper.Map<PacienteDtoResponse>( entity );
+                return _Mapper.Map<PacienteDtoResponse>( entity );
+            }
+            catch ( Exception ex )
+            {
+                throw new Exception( ex.Message );
+            }
         }
 
         public async Task<PacienteDtoResponse> PostAsync( PacienteDtoRequest pacienteDto )
         {
-            var model = _Mapper.Map<PacienteModel>( pacienteDto );
-            var entity = _Mapper.Map<PacienteEntity>( model );
+            try
+            {
+                var model = _Mapper.Map<PacienteModel>( pacienteDto );
+                var entity = _Mapper.Map<PacienteEntity>( model );
 
-            var result = await _Repository.PostAsync( entity );
+                var result = await _Repository.PostAsync( entity );
 
-            return _Mapper.Map<PacienteDtoResponse>( result );
+                return _Mapper.Map<PacienteDtoResponse>( result );
+            }
+            catch ( Exception ex )
+            {
+                throw new Exception( ex.Message );
+            }
         }
 
         public async Task<PacienteDtoResponse> PutAsync( Guid id, PacienteDtoRequest pacienteDto )
         {
-            if ( await _Repository.CheckExists( id ) == false )
+            try
             {
-                throw new Exception( "Usuário não existe no sistema" );
+                if ( await _Repository.CheckExists( id ) == false )
+                {
+                    throw new Exception( "Usuário não existe no sistema" );
+                }
+
+                var model = _Mapper.Map<PacienteModel>( pacienteDto );
+
+                model.Id = id;
+
+                var entity = _Mapper.Map<PacienteEntity>( model );
+
+                var result = await _Repository.PutAsync( entity );
+
+                return _Mapper.Map<PacienteDtoResponse>( result );
             }
-
-            var model = _Mapper.Map<PacienteModel>( pacienteDto );
-
-            model.Id = id;
-
-            var entity = _Mapper.Map<PacienteEntity>( model );
-
-            var result = await _Repository.PutAsync( entity );
-
-            return _Mapper.Map<PacienteDtoResponse>( result );
+            catch ( Exception ex )
+            {
+                throw new Exception( ex.Message );
+            }
         }
 
         public async Task<bool> DeleteAsync( Guid id )
         {
-            return await _Repository.DeleteAsync( id );
+            try
+            {
+                return await _Repository.DeleteAsync( id );
+            }
+            catch ( Exception ex )
+            {
+                throw new Exception( ex.Message );
+            }
         }
     }
 }

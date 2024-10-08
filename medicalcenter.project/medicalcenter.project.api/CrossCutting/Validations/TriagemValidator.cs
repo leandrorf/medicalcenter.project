@@ -12,7 +12,7 @@ namespace medicalcenter.project.api.CrossCutting.Validations
 
         private void Validations( )
         {
-            RuleFor( x => x.AtendimentoID )
+            RuleFor( x => x.AtendimentoId )
                 .NotEmpty( )
                 .WithMessage( "O registro [AtendimentoID] é obrigatório." );
 

@@ -20,49 +20,84 @@ namespace medicalcenter.project.api.Services
 
         public async Task<IEnumerable<EspecialidadeDtoResponse>> GetAsync( )
         {
-            var entity = await _Repository.GetAsync( );
+            try
+            {
+                var entity = await _Repository.GetAsync( );
 
-            return _Mapper.Map<IEnumerable<EspecialidadeDtoResponse>>( entity );
+                return _Mapper.Map<IEnumerable<EspecialidadeDtoResponse>>( entity );
+            }
+            catch ( Exception ex )
+            {
+                throw new Exception( ex.Message );
+            }
         }
 
         public async Task<EspecialidadeDtoResponse> GetByIdAsync( Guid id )
         {
-            var entity = await _Repository.GetByIdAsync( id );
+            try
+            {
+                var entity = await _Repository.GetByIdAsync( id );
 
-            return _Mapper.Map<EspecialidadeDtoResponse>( entity );
+                return _Mapper.Map<EspecialidadeDtoResponse>( entity );
+            }
+            catch ( Exception ex )
+            {
+                throw new Exception( ex.Message );
+            }
         }
 
         public async Task<EspecialidadeDtoResponse> PostAsync( EspecialidadeDtoRequest EspecialidadeDto )
         {
-            var model = _Mapper.Map<EspecialidadeModel>( EspecialidadeDto );
-            var entity = _Mapper.Map<EspecialidadeEntity>( model );
+            try
+            {
+                var model = _Mapper.Map<EspecialidadeModel>( EspecialidadeDto );
+                var entity = _Mapper.Map<EspecialidadeEntity>( model );
 
-            var result = await _Repository.PostAsync( entity );
+                var result = await _Repository.PostAsync( entity );
 
-            return _Mapper.Map<EspecialidadeDtoResponse>( result );
+                return _Mapper.Map<EspecialidadeDtoResponse>( result );
+            }
+            catch ( Exception ex )
+            {
+                throw new Exception( ex.Message );
+            }
         }
 
         public async Task<EspecialidadeDtoResponse> PutAsync( Guid id, EspecialidadeDtoRequest EspecialidadeDto )
         {
-            if ( await _Repository.CheckExists( id ) == false )
+            try
             {
-                throw new Exception( "Especialidade não existe no sistema" );
+                if ( await _Repository.CheckExists( id ) == false )
+                {
+                    throw new Exception( "Especialidade não existe no sistema" );
+                }
+
+                var model = _Mapper.Map<EspecialidadeModel>( EspecialidadeDto );
+
+                model.Id = id;
+
+                var entity = _Mapper.Map<EspecialidadeEntity>( model );
+
+                var result = await _Repository.PutAsync( entity );
+
+                return _Mapper.Map<EspecialidadeDtoResponse>( result );
             }
-
-            var model = _Mapper.Map<EspecialidadeModel>( EspecialidadeDto );
-
-            model.Id = id;
-
-            var entity = _Mapper.Map<EspecialidadeEntity>( model );
-
-            var result = await _Repository.PutAsync( entity );
-
-            return _Mapper.Map<EspecialidadeDtoResponse>( result );
+            catch ( Exception ex )
+            {
+                throw new Exception( ex.Message );
+            }
         }
 
         public async Task<bool> DeleteAsync( Guid id )
         {
-            return await _Repository.DeleteAsync( id );
+            try
+            {
+                return await _Repository.DeleteAsync( id );
+            }
+            catch ( Exception ex )
+            {
+                throw new Exception( ex.Message );
+            }
         }
     }
 }

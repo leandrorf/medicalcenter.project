@@ -11,69 +11,139 @@ namespace medicalcenter.project.api.Services
     public class AtendimentoService : IAtendimentoService
     {
         private readonly IMapper _Mapper;
-        private readonly IAtendimentoRepository _Repository;
+        private readonly IAtendimentoRepository _AtendimentoRepository;
+        private readonly IPacienteRepository _PacienteRepository;
 
-        public AtendimentoService( IMapper mapper, IAtendimentoRepository repository )
+        public AtendimentoService( IMapper mapper, IAtendimentoRepository atendimentoRepository, IPacienteRepository pacienteRepository )
         {
             _Mapper = mapper;
-            _Repository = repository;
+            _AtendimentoRepository = atendimentoRepository;
+            _PacienteRepository = pacienteRepository;
         }
 
         public async Task<IEnumerable<AtendimentoDtoResponse>> GetAsync( )
         {
-            var entity = await _Repository.GetAsync( );
+            try
+            {
+                var entity = await _AtendimentoRepository.GetAsync( );
+                var dtp = _Mapper.Map<IEnumerable<AtendimentoDtoResponse>>( entity );
 
-            return _Mapper.Map<IEnumerable<AtendimentoDtoResponse>>( entity );
+                var listPacientes = dtp.ToList( );
+
+                for ( int idx = 0; idx < listPacientes.Count( ); idx++ )
+                {
+                    listPacientes[ idx ].PacienteNome = _PacienteRepository.GetByIdAsync( listPacientes[ idx ].PacienteId ).Result.Nome;
+                }
+
+                return _Mapper.Map<IEnumerable<AtendimentoDtoResponse>>( listPacientes );
+            }
+            catch ( Exception ex )
+            {
+                throw new Exception( ex.Message );
+            }
         }
 
         public async Task<AtendimentoDtoResponse> GetByIdAsync( Guid id )
         {
-            var entity = await _Repository.GetByIdAsync( id );
+            try
+            {
+                var entity = await _AtendimentoRepository.GetByIdAsync( id );
 
-            return _Mapper.Map<AtendimentoDtoResponse>( entity );
+                return _Mapper.Map<AtendimentoDtoResponse>( entity );
+            }
+            catch ( Exception ex )
+            {
+                throw new Exception( ex.Message );
+            }
         }
 
         public async Task<AtendimentoDtoResponse> PostAsync( AtendimentoDtoRequest atendimentoDto )
         {
-            var model = _Mapper.Map<AtendimentoModel>( atendimentoDto );
-            var entity = _Mapper.Map<AtendimentoEntity>( model );
+            try
+            {
+                var model = _Mapper.Map<AtendimentoModel>( atendimentoDto );
+                var entity = _Mapper.Map<AtendimentoEntity>( model );
+                var result = await _AtendimentoRepository.PostAsync( entity );
 
-            var result = await _Repository.PostAsync( entity );
-
-            return _Mapper.Map<AtendimentoDtoResponse>( result );
+                return _Mapper.Map<AtendimentoDtoResponse>( result );
+            }
+            catch ( Exception ex )
+            {
+                throw new Exception( ex.Message );
+            }
         }
 
-        public async Task<AtendimentoDtoResponse> PutAsync( Guid id, AtendimentoDtoRequest AtendimentoDto )
+        public async Task<AtendimentoDtoResponse> PutAsync( Guid id, AtendimentoDtoRequest atendimentoDto )
         {
-            if ( await _Repository.CheckExists( id ) == false )
+            try
             {
-                throw new Exception( "Atendimento não existe no sistema" );
+                if ( await _AtendimentoRepository.CheckExists( id ) == false )
+                {
+                    throw new Exception( "Atendimento não existe no sistema" );
+                }
+
+                var model = _Mapper.Map<AtendimentoModel>( atendimentoDto );
+                var entity = _Mapper.Map<AtendimentoEntity>( model );
+
+                entity.Id = id;
+
+                var result = await _AtendimentoRepository.PutAsync( entity );
+
+                return _Mapper.Map<AtendimentoDtoResponse>( result );
             }
-
-            var entity = await _Repository.GetByIdAsync( id );
-
-            var result = await _Repository.PutAsync( entity );
-
-            return _Mapper.Map<AtendimentoDtoResponse>( result );
+            catch ( Exception ex )
+            {
+                throw new Exception( ex.Message );
+            }
         }
 
         public async Task<bool> DeleteAsync( Guid id )
         {
-            return await _Repository.DeleteAsync( id );
+            try
+            {
+                return await _AtendimentoRepository.DeleteAsync( id );
+            }
+            catch ( Exception ex )
+            {
+                throw new Exception( ex.Message );
+            }
         }
 
         public async Task<AtendimentoDtoResponse> GetNextPatient( EAreasAtendimento service )
         {
-            var entity = await _Repository.GetNextPatient( service );
+            try
+            {
+                var entity = await _AtendimentoRepository.GetNextPatient( service );
+                var dto = _Mapper.Map<AtendimentoDtoResponse>( entity );
+                dto.PacienteNome = _PacienteRepository.GetByIdAsync( dto.PacienteId ).Result.Nome;
 
-            return _Mapper.Map<AtendimentoDtoResponse>( entity );
+                return dto;
+            }
+            catch ( Exception ex )
+            {
+                throw new Exception( ex.Message );
+            }
         }
 
         public async Task<IEnumerable<AtendimentoDtoResponse>> GetQueueForService( EAreasAtendimento service )
         {
-            var entities = await _Repository.GetQueueForService( service );
+            try
+            {
+                var entities = await _AtendimentoRepository.GetQueueForService( service );
+                var dto = _Mapper.Map<IEnumerable<AtendimentoDtoResponse>>( entities );
+                var listPacientes = dto.ToList( );
 
-            return _Mapper.Map<IEnumerable<AtendimentoDtoResponse>>( entities );
+                for ( int idx = 0; idx < dto.Count( ); idx++ )
+                {
+                    listPacientes[ idx ].PacienteNome = _PacienteRepository.GetByIdAsync( listPacientes[ idx ].PacienteId ).Result.Nome;
+                }
+
+                return dto;
+            }
+            catch ( Exception ex )
+            {
+                throw new Exception( ex.Message );
+            }
         }
     }
 }

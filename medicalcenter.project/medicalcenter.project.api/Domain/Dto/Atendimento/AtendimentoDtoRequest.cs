@@ -5,4 +5,5 @@ namespace medicalcenter.project.api.Domain.Dto.Atendimento;
 public class AtendimentoDtoRequest
 {
     public Guid PacienteId { get; set; }
+    public EStatusAtendimento Status { get; set; }
 }

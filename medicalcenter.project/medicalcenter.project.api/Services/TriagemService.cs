@@ -10,59 +10,120 @@ namespace medicalcenter.project.api.Services
     public class TriagemService : ITriagemService
     {
         private readonly IMapper _Mapper;
-        private readonly ITriagemRepository _Repository;
+        private readonly ITriagemRepository _TriagemRepository;
+        private readonly IEspecialidadeRepository _EspecialidadeRepository;
+        private readonly IAtendimentoRepository _AtendimentoRepository;
+        private readonly IPacienteRepository _PacienteRepository;
 
-        public TriagemService( IMapper mapper, ITriagemRepository repository )
+        public TriagemService( IMapper mapper,
+            ITriagemRepository triagemRepository,
+            IEspecialidadeRepository especialidadeRepository,
+            IAtendimentoRepository atendimentoRepository,
+            IPacienteRepository pacienteRepository )
         {
             _Mapper = mapper;
-            _Repository = repository;
+            _TriagemRepository = triagemRepository;
+            _EspecialidadeRepository = especialidadeRepository;
+            _AtendimentoRepository = atendimentoRepository;
+            _PacienteRepository = pacienteRepository;
         }
 
         public async Task<IEnumerable<TriagemDtoResponse>> GetAsync( )
         {
-            var entity = await _Repository.GetAsync( );
+            try
+            {
+                var entity = await _TriagemRepository.GetAsync( );
+                var dto = _Mapper.Map<IEnumerable<TriagemDtoResponse>>( entity );
+                var list = dto.ToList( );
 
-            return _Mapper.Map<IEnumerable<TriagemDtoResponse>>( entity );
+                for ( int idx = 0; idx < list.Count( ); idx++ )
+                {
+                    list[ idx ].EspecialidadeNome = _EspecialidadeRepository.GetByIdAsync( list[ idx ].EspecialidadeId ).Result.Nome;
+
+                    var pacienteId = _AtendimentoRepository.GetByIdAsync( list[ idx ].AtendimentoId ).Result.PacienteId;
+
+                    list[ idx ].PacienteNome = _PacienteRepository.GetByIdAsync( pacienteId ).Result.Nome;
+                }
+
+                return _Mapper.Map<IEnumerable<TriagemDtoResponse>>( list );
+            }
+            catch ( Exception ex )
+            {
+                throw new Exception( ex.Message );
+            }
         }
 
         public async Task<TriagemDtoResponse> GetByIdAsync( Guid id )
         {
-            var entity = await _Repository.GetByIdAsync( id );
+            try
+            {
+                var entity = await _TriagemRepository.GetByIdAsync( id );
 
-            return _Mapper.Map<TriagemDtoResponse>( entity );
+                return _Mapper.Map<TriagemDtoResponse>( entity );
+            }
+            catch ( Exception ex )
+            {
+                throw new Exception( ex.Message );
+            }
         }
 
         public async Task<TriagemDtoResponse> PostAsync( TriagemDtoRequest TriagemDto )
         {
-            var model = _Mapper.Map<TriagemModel>( TriagemDto );
-            var entity = _Mapper.Map<TriagemEntity>( model );
+            try
+            {
+                var model = _Mapper.Map<TriagemModel>( TriagemDto );
+                var entity = _Mapper.Map<TriagemEntity>( model );
 
-            var result = await _Repository.PostAsync( entity );
+                var result = await _TriagemRepository.PostAsync( entity );
 
-            return _Mapper.Map<TriagemDtoResponse>( result );
+                var atendimento = await _AtendimentoRepository.GetByIdAsync( result.AtendimentoId );
+                atendimento.Status = Domain.Enums.EStatusAtendimento.AguardandoEspecialista;
+
+                await _AtendimentoRepository.PutAsync( atendimento );
+
+                return _Mapper.Map<TriagemDtoResponse>( result );
+            }
+            catch ( Exception ex )
+            {
+                throw new Exception( ex.Message );
+            }
         }
 
         public async Task<TriagemDtoResponse> PutAsync( Guid id, TriagemDtoRequest TriagemDto )
         {
-            if ( await _Repository.CheckExists( id ) == false )
+            try
             {
-                throw new Exception( "Triagem não existe no sistema" );
+                if ( await _TriagemRepository.CheckExists( id ) == false )
+                {
+                    throw new Exception( "Triagem não existe no sistema" );
+                }
+
+                var model = _Mapper.Map<TriagemModel>( TriagemDto );
+
+                model.Id = id;
+
+                var entity = _Mapper.Map<TriagemEntity>( model );
+
+                var result = await _TriagemRepository.PutAsync( entity );
+
+                return _Mapper.Map<TriagemDtoResponse>( result );
             }
-
-            var model = _Mapper.Map<TriagemModel>( TriagemDto );
-
-            model.Id = id;
-
-            var entity = _Mapper.Map<TriagemEntity>( model );
-
-            var result = await _Repository.PutAsync( entity );
-
-            return _Mapper.Map<TriagemDtoResponse>( result );
+            catch ( Exception ex )
+            {
+                throw new Exception( ex.Message );
+            }
         }
 
         public async Task<bool> DeleteAsync( Guid id )
         {
-            return await _Repository.DeleteAsync( id );
+            try
+            {
+                return await _TriagemRepository.DeleteAsync( id );
+            }
+            catch ( Exception ex )
+            {
+                throw new Exception( ex.Message );
+            }
         }
     }
 }
