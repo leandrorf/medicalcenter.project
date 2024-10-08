@@ -66,8 +66,8 @@
 
 .atendimentos-container ul li button {
     position: absolute;
-    right: 25px;
-    top: 25px;
+    right: 10px;
+    top: 5px;
     border: 0;
     background: transparent;  
 }

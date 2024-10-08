@@ -15,14 +15,18 @@ export default function NovoPaciente(){
     const {atendimentoId} = useParams();
     const history = useHistory();
 
-   useEffect(()=>{
-      loadPacientes();
-
-      if(atendimentoId === '0')
-         return;
-      else
-         loadAtendimento();
-   }, atendimentoId);
+    useEffect( ()=> {
+      const interval = setInterval(() => {
+         loadPacientes();
+      
+         if(atendimentoId === '0')
+            return;
+         else
+            loadAtendimento();         
+      }, 1000);
+  
+      return () => clearInterval(interval);
+    }, []);
 
     async function loadPacientes(){
       const pacientesResponse = await api.get('api/pacientes');

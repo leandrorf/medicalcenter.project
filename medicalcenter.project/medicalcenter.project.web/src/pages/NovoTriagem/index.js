@@ -21,15 +21,23 @@ export default function NovoTriagem(){
     const {triagemId} = useParams();
     const history = useHistory();
 
-    useEffect(()=>{
-      getNextPatient();
-      loadEspecialidades();
-
-       if(triagemId === '0')
-         return;
-       else
-         loadTriagem();
-    }, triagemId)
+    useEffect( ()=> {
+      const interval = setInterval(() => {
+         getNextPatient();
+         loadEspecialidades();
+         
+         if(triagemId === '0')
+         {
+            return;
+         }
+         else
+         {
+            loadTriagem();
+         }
+      }, 1000);
+  
+      return () => clearInterval(interval);
+    }, []);
 
     async function getNextPatient(){
       try{

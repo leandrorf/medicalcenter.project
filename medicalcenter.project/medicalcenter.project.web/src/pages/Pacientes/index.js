@@ -3,19 +3,23 @@ import { Link, useHistory } from 'react-router-dom';
 import './styles.css';
 import api from '../../services/api';
 
-import { FiEdit, FiUserX, FiHome, FiChevronRight, FiActivity } from 'react-icons/fi';
+import { FiEdit, FiHome, FiChevronRight, FiActivity } from 'react-icons/fi';
 
 export default function Pacientes() {
 
   const [pacientes, setPacientes] = useState([]);
-  
   const history = useHistory();
 
   useEffect( ()=> {
-    api.get('api/pacientes').then(
-      response=> {setPacientes(response.data);
-     })
-  })
+    const interval = setInterval(() => {
+      api.get('api/pacientes').then(
+        response=> {
+          setPacientes(response.data);
+        });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   async function editPaciente(id){
     try{
@@ -25,17 +29,17 @@ export default function Pacientes() {
     }
   }
 
-  async function deletepaciente(id){
-    try{
-       if(window.confirm('Deseja deletar o paciente de id = ' + id + ' ?'))
-       {
-             await api.delete(`api/pacientes/${id}`);
-             setPacientes(pacientes.filter(x => x.id !== id));
-       }
-    }catch(error){
-     alert('Não foi possível excluir o aluno')
-    }
-  }
+  // async function deletepaciente(id){
+  //   try{
+  //      if(window.confirm('Deseja deletar o paciente de id = ' + id + ' ?'))
+  //      {
+  //            await api.delete(`api/pacientes/${id}`);
+  //            setPacientes(pacientes.filter(x => x.id !== id));
+  //      }
+  //   }catch(error){
+  //    alert('Não foi possível excluir o aluno')
+  //   }
+  // }
 
   return (
     <div className="pacienetes-container">
@@ -55,17 +59,17 @@ export default function Pacientes() {
         {pacientes.map(x=>(
           <li key={x.id}>
             <b>Nome:</b> {x.nome}<br/><br/>
-            <b>Sexo:</b> {x.sexo == 1 ? "Masculino" : "Feminino"}<br/><br/>
+            <b>Sexo:</b> {x.sexo === 1 ? "Masculino" : "Feminino"}<br/><br/>
             <b>Email:</b> {x.email}<br/><br/>
             <b>Telefone:</b> {x.telefone}<br/><br/>
 
             <button onClick={()=> editPaciente(x.id)} type="button">
-                <FiEdit size="25" color="#17202a" />
+              <FiEdit size="25" color="#0099ff" />
             </button>
 
-            <button type="button" onClick= {()=> deletepaciente(x.id)}>
+            {/* <button type="button" onClick= {()=> deletepaciente(x.id)}>
               <FiUserX size="25" color="#FF0000" />
-            </button>
+            </button> */}
           </li>
         ))}
       </ul>

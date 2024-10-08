@@ -3,21 +3,23 @@ import { Link, useHistory } from 'react-router-dom';
 import './styles.css';
 import api from '../../services/api';
 
-import Select from 'react-select';
-
-import { FiEdit, FiUserX, FiHome, FiChevronRight, FiActivity } from 'react-icons/fi';
+import { FiEdit, FiHome, FiChevronRight, FiActivity } from 'react-icons/fi';
 
 export default function Triagens() {
 
-  const [triagens, setTriagens] = useState([]);
-  
+  const [triagens, setTriagens] = useState([]);  
   const history = useHistory();
 
   useEffect( ()=> {
-    api.get('api/triagens').then(
-      response=> {setTriagens(response.data);
-     })
-  })
+    const interval = setInterval(() => {
+      api.get('api/triagens').then(
+        response=> {
+          setTriagens(response.data);
+        });
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   async function editTriagem(id){
     try{
@@ -27,17 +29,17 @@ export default function Triagens() {
     }
   }
 
-  async function deleteTriagem(id){
-    try{
-       if(window.confirm('Deseja deletar o triagem de id = ' + id + ' ?'))
-       {
-             await api.delete(`api/triagens/${id}`);
-             setTriagens(triagens.filter(x => x.id !== id));
-       }
-    }catch(error){
-     alert('Não foi possível excluir o aluno')
-    }
-  }
+  // async function deleteTriagem(id){
+  //   try{
+  //      if(window.confirm('Deseja deletar o triagem de id = ' + id + ' ?'))
+  //      {
+  //            await api.delete(`api/triagens/${id}`);
+  //            setTriagens(triagens.filter(x => x.id !== id));
+  //      }
+  //   }catch(error){
+  //    alert('Não foi possível excluir o aluno')
+  //   }
+  // }
 
   return (
     <div className="triagens-container">
@@ -64,12 +66,12 @@ export default function Triagens() {
             <b>Altura:</b> {x.altura}<br/><br/>
 
             <button onClick={()=> editTriagem(x.id)} type="button">
-              <FiEdit size="25" color="#17202a" />
+              <FiEdit size="25" color="#0099ff" />
             </button>
 
-            <button type="button" onClick= {()=> deleteTriagem(x.id)}>
+            {/* <button type="button" onClick= {()=> deleteTriagem(x.id)}>
               <FiUserX size="25" color="#FF0000" />
-            </button>
+            </button> */}
           </li>
         ))}
       </ul>

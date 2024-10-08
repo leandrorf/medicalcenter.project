@@ -12,7 +12,7 @@ export default function NovoPaciente(){
    const [nome, setNome] = useState('');
    const [email, setEmail] = useState('');
    const [telefone, setTelefone] = useState('');
-   const [sexo, setSexo] = useState('');
+   const [sexo, setSexo] = useState();
 
     const {pacienteId} = useParams();
     const history = useHistory();
@@ -27,7 +27,7 @@ export default function NovoPaciente(){
     async function loadPaciente(){
        try{
          const response = await api.get(`api/pacientes/${pacienteId}`);
-
+         
          setId(response.data.id);
          setNome(response.data.nome);
          setEmail(response.data.email);
@@ -66,12 +66,14 @@ export default function NovoPaciente(){
          history.push('/pacientes');
     }
 
-    const options = [
+    const genderOptions = [
+      { value: 0, label: "" },
       { value: 1, label: "Masculino" },
       { value: 2, label: "Feminino" }
     ]
 
     const handleChange = (e) => {
+      console.log("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
       setSexo(e.value);
     };
 
@@ -92,7 +94,11 @@ export default function NovoPaciente(){
                />
 
                <br /> &nbsp;
-               <Select options={options} onChange={handleChange} />
+               <Select placeholder="Sexo"
+                  options={genderOptions}
+                  defaultValue={genderOptions[sexo]}
+                  onChange={handleChange}
+               />
 
                <input  placeholder="Email" 
                 value={email}

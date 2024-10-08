@@ -12,10 +12,14 @@ export default function Especialidades() {
   const history = useHistory();
 
   useEffect( ()=> {
-    api.get('api/especialidades').then(
-      response=> {setEspecialidades(response.data);
-     })
-  })
+    const interval = setInterval(() => {
+      api.get('api/especialidades').then(
+        response=> {setEspecialidades(response.data);
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   async function editEspecialidade(id){
     try{
@@ -58,12 +62,12 @@ export default function Especialidades() {
             <b>Descrição:</b> {x.descricao}<br/><br/>
 
             <button onClick={()=> editEspecialidade(x.id)} type="button">
-                <FiEdit size="25" color="#17202a" />
+              <FiEdit size="25" color="#0099ff" />
             </button>
 
-            <button type="button" onClick= {()=> deleteEspecialidade(x.id)}>
-              <FiUserX size="25" color="#FF0000" />
-            </button>
+            {/* <button type="button" onClick= {()=> deleteEspecialidade(x.id)}>
+              <FiUserX size="25" color="#FF0000" /> Deletar
+            </button> */}
           </li>
         ))}
       </ul>
