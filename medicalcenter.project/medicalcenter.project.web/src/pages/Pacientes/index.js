@@ -1,9 +1,9 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import './styles.css';
 import api from '../../services/api';
 
-import { FiEdit, FiHome, FiChevronRight, FiActivity } from 'react-icons/fi';
+import { FiEdit, FiHome, FiChevronRight, FiActivity, FiUserX } from 'react-icons/fi';
 
 export default function Pacientes() {
 
@@ -11,15 +11,15 @@ export default function Pacientes() {
   const history = useHistory();
 
   useEffect( ()=> {
-    const interval = setInterval(() => {
-      api.get('api/pacientes').then(
-        response=> {
-          setPacientes(response.data);
-        });
-    }, 1000);
-
-    return () => clearInterval(interval);
+    loadPacientes();
   }, []);
+
+  async function loadPacientes() {
+    api.get('api/pacientes').then(
+      response => {
+        setPacientes(response.data);
+      });
+  }
 
   async function editPaciente(id){
     try{
@@ -29,17 +29,17 @@ export default function Pacientes() {
     }
   }
 
-  // async function deletepaciente(id){
-  //   try{
-  //      if(window.confirm('Deseja deletar o paciente de id = ' + id + ' ?'))
-  //      {
-  //            await api.delete(`api/pacientes/${id}`);
-  //            setPacientes(pacientes.filter(x => x.id !== id));
-  //      }
-  //   }catch(error){
-  //    alert('Não foi possível excluir o aluno')
-  //   }
-  // }
+  async function deletepaciente(id){
+    try{
+       if(window.confirm('Deseja deletar o paciente de id = ' + id + ' ?'))
+       {
+             await api.delete(`api/pacientes/${id}`);
+             setPacientes(pacientes.filter(x => x.id !== id));
+       }
+    }catch(error){
+     alert('Não foi possível excluir o paciente')
+    }
+  }
 
   return (
     <div className="pacienetes-container">
@@ -67,9 +67,9 @@ export default function Pacientes() {
               <FiEdit size="25" color="#0099ff" />
             </button>
 
-            {/* <button type="button" onClick= {()=> deletepaciente(x.id)}>
+            <button type="button" className='delete' onClick= {()=> deletepaciente(x.id)}>
               <FiUserX size="25" color="#FF0000" />
-            </button> */}
+            </button>
           </li>
         ))}
       </ul>

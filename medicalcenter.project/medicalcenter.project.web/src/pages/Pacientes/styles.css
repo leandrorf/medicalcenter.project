@@ -72,6 +72,12 @@
     background: transparent;  
 }
 
+.pacienetes-container ul li button + .delete {
+    color: #201465;
+    top: 5px;
+    margin-right: 35px;
+}
+
 .pacienetes-container ul li button + button{
     top: 50px;  
 }

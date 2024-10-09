@@ -2,11 +2,11 @@ import React , {useEffect, useState} from 'react';
 import './styles.css';
 import {Link,useHistory , useParams} from 'react-router-dom';
 import {FiCornerDownLeft, FiUserPlus } from 'react-icons/fi';
-import api from '../../services/api';
+import api from '../../../services/api';
 
 import Select from 'react-select'
 
-export default function NovoPaciente(){
+export default function PacienteDetails(){
 
    const [id,setId]= useState('');
    const [nome, setNome] = useState('');
@@ -144,7 +144,7 @@ export default function NovoPaciente(){
             
             <form onSubmit={saveOrUpdate}>
                <span className="error">{errors.nome}</span>
-               <input placeholder="Nome" 
+               <input placeholder="Nome"
                   value={nome}
                   onChange= {e => setNome(e.target.value)} />
 

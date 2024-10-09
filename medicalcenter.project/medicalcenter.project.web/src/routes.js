@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Pacientes from './pages/Pacientes';
-import NovoPaciente from './pages/NovoPaciente';
+import PacienteDetails from './pages/Pacientes/Details';
 import Atendimentos from './pages/Atendimentos';
 import NovoAtendimento from './pages/NovoAtendimento';
 import Triagens from './pages/Triagens';
@@ -18,7 +18,7 @@ export default function Routes(){
            <Switch>
                <Route path="/" exact component={Home} />
                <Route path="/pacientes" component={Pacientes}/>
-               <Route path="/paciente/novo/:pacienteId" component={NovoPaciente}/>
+               <Route path="/paciente/novo/:pacienteId" component={PacienteDetails}/>
                <Route path="/atendimentos" component={Atendimentos}/>
                <Route path="/atendimento/novo/:atendimentoId" component={NovoAtendimento}/>
                <Route path="/triagens" component={Triagens} />
