@@ -13,21 +13,46 @@ export default function Espera() {
   const [atentdimentoAtual, setAtentdimentoAtual] = useState('');
 
   useEffect( ()=> {
-    const interval = setInterval(() => {
-      api.get('api/Atendimentos/VisualizarFila', {
-        params: {
-          service: 2
-        }
-      }).then(
-        response=> {
-          setEspera(response.data);  
-        });
-        
-      getNextPatient();   
-    }, 1000);
+    api.get('api/Atendimentos/VisualizarFila', {
+      params: {
+        service: 2
+      }
+    }).then(
+      response=> {
+        setEspera(response.data);  
+      });
 
-    return () => clearInterval(interval);
+    // const interval = setInterval(() => {
+    //   api.get('api/Atendimentos/VisualizarFila', {
+    //     params: {
+    //       service: 2
+    //     }
+    //   }).then(
+    //     response=> {
+    //       setEspera(response.data);  
+    //     });
+        
+    //   getNextPatient();   
+    // }, 1000);
+
+    // return () => clearInterval(interval);
+    loadQueue();
   }, []);
+
+  async function loadQueue() {
+    const response = await api.get('api/Atendimentos/VisualizarFila', {
+      params: {
+        service: 2
+      }
+    });
+
+    setEspera(response.data)
+    
+    // .then(
+    //   response=> {
+    //     setEspera(response.data);  
+    //   });
+  }
 
   async function getNextPatient(){
     const response = await api.get('api/Atendimentos/ChamarPaciente',{
@@ -35,6 +60,9 @@ export default function Espera() {
          service: 2
       }
    });
+
+   console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+   console.log(response.data);
 
    if (response.data.status === 2){
     setAtentdimentoAtual(response.data);

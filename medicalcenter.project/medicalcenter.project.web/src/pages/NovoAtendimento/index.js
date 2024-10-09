@@ -11,9 +11,23 @@ export default function NovoPaciente(){
    const [id,setId]= useState('');
    const [pacienteId, setPacienteId] = useState('');
    const [pacientes, setPacientes] = useState([]);
+   const [errors, setErrors] = useState({});
    
     const {atendimentoId} = useParams();
     const history = useHistory();
+
+    const handleValidation = () => {
+      const formErrors = {};
+      let formIsValid = true;
+  
+      if(!pacienteId){
+        formIsValid = false;
+        formErrors.paciente = "O paciente é obrigatório";
+      }
+
+      setErrors(formErrors)
+      return formIsValid;
+    }
 
     useEffect( ()=> {
       const interval = setInterval(() => {
@@ -59,6 +73,13 @@ export default function NovoPaciente(){
             pacienteId,
          }
 
+         if(handleValidation()){
+            alert("Atendimento cadastrado com sucesso!");
+          }else{
+            alert("Um ou mais campos não foram preenchidos.")
+            return;
+          }
+
          try{
            if(atendimentoId==='0')
            {
@@ -91,7 +112,9 @@ export default function NovoPaciente(){
             
             <form onSubmit={saveOrUpdate}>
 
-               <Select options={pacientes} onChange={handleChange} />
+            <span className="error">{errors.paciente}</span>
+               <Select options={pacientes} 
+                  onChange={handleChange} />
                
                <button className="button" type="submit">{atendimentoId === '0'? 'Incluir ' : 'Atualizar '}</button>
             </form>

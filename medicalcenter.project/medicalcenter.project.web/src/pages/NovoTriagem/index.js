@@ -15,11 +15,44 @@ export default function NovoTriagem(){
    const [pressaoArterial, setPressaoArterial] = useState('');
    const [peso, setPeso] = useState('');
    const [altura, setAltura] = useState('');
-
    const [especialidades, setEspecialidades] = useState('');
+   const [errors, setErrors] = useState({});
 
     const {triagemId} = useParams();
     const history = useHistory();
+
+    const handleValidation = () => {
+      const formErrors = {};
+      let formIsValid = true;
+  
+      if(!especialidadeId){
+        formIsValid = false;
+        formErrors.especialidadeId = "A especialidade é obrigatório";
+      }
+
+      if(!sintomas){
+         formIsValid = false;
+         formErrors.sintomas = "Os sintomas são obrigatórios";
+       }
+  
+      if(!pressaoArterial){
+        formIsValid = false;
+        formErrors.pressaoArterial = "A pressão arterial é obrigatório";
+      }
+  
+      if(!peso){
+         formIsValid = false;
+         formErrors.peso = "O peso é obrigatório";
+      }
+
+      if(!altura){
+         formIsValid = false;
+         formErrors.altura = "A altura é obrigatório";
+      }
+
+      setErrors(formErrors)
+      return formIsValid;
+    }
 
     useEffect( ()=> {
       const interval = setInterval(() => {
@@ -104,6 +137,14 @@ export default function NovoTriagem(){
             altura
          }
 
+         if(handleValidation()){
+            alert("Triagem cadastrada com sucesso!");
+          }
+          else{
+            alert("Um ou mais campos não foram preenchidos.")
+            return;
+          }   
+
          try{
            if(triagemId==='0')
            {
@@ -142,22 +183,27 @@ export default function NovoTriagem(){
                />
 
                <br />&nbsp;
+               <span className="error">{errors.especialidadeId}</span>
                <Select placeholder="Selecione a especialidade"
                   options={especialidades}
                   onChange={handleChange} />
                
+               <span className="error">{errors.sintomas}</span>
                <input  placeholder="Sintomas" 
                 value={sintomas}
-                onChange={e => setSintomas(e.target.value)}
-               />
+                onChange={e => setSintomas(e.target.value)} />
+
+               <span className="error">{errors.pressaoArterial}</span>
                <input  placeholder="Pressao Arterial" 
                   value={pressaoArterial}
-                  onChange={e => setPressaoArterial(e.target.value)}
-               />
+                  onChange={e => setPressaoArterial(e.target.value)} />
+               
+               <span className="error">{errors.peso}</span>
                <input  placeholder="Peso" 
                   value={peso}
-                  onChange={e => setPeso(e.target.value)}
-               />
+                  onChange={e => setPeso(e.target.value)} />
+
+               <span className="error">{errors.altura}</span>
                <input  placeholder="Altura" 
                   value={altura}
                   onChange={e => setAltura(e.target.value)}
